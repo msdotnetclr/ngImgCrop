@@ -5,14 +5,14 @@ crop.factory('cropArea', ['cropCanvas', function(CropCanvas) {
     this._ctx=ctx;
     this._events=events;
 
-    this._minSize=80;
+    this._minHeight = this._minWidth =80;
 
     this._cropCanvas=new CropCanvas(ctx);
 
     this._image=new Image();
     this._x = 0;
     this._y = 0;
-    this._size = 200;
+    this._height = this._width = 200;
   };
 
   /* GETTERS/SETTERS */
@@ -40,40 +40,58 @@ crop.factory('cropArea', ['cropCanvas', function(CropCanvas) {
     this._dontDragOutside();
   };
 
-  CropArea.prototype.getSize = function () {
-    return this._size;
+  CropArea.prototype.getHeight = function () {
+    return this._height;
   };
-  CropArea.prototype.setSize = function (size) {
-    this._size = Math.max(this._minSize, size);
+  CropArea.prototype.setHeight = function (height) {
+    this._height = Math.max(this._minHeight, height);
     this._dontDragOutside();
   };
 
-  CropArea.prototype.getMinSize = function () {
-    return this._minSize;
+  CropArea.prototype.getMinHeight = function () {
+    return this._minHeight;
   };
-  CropArea.prototype.setMinSize = function (size) {
-    this._minSize = size;
-    this._size = Math.max(this._minSize, this._size);
+  CropArea.prototype.setMinHeight = function (height) {
+      this._minHeight = height;
+    this._height = Math.max(this._minHeight, this._height);
     this._dontDragOutside();
+  };
+
+  CropArea.prototype.getWidth = function () {
+      return this._width;
+  };
+  CropArea.prototype.setWidth = function (width) {
+      this._width = Math.max(this._minWidth, width);
+      this._dontDragOutside();
+  };
+
+  CropArea.prototype.getMinWidth = function () {
+      return this._minWidth;
+  };
+
+  CropArea.prototype.setMinWidth = function (width) {
+      this._minWidth = width;
+      this._width = Math.max(this._minWidth, this._width);
+      this._dontDragOutside();
   };
 
   /* FUNCTIONS */
   CropArea.prototype._dontDragOutside=function() {
     var h=this._ctx.canvas.height,
         w=this._ctx.canvas.width;
-    if(this._size>w) { this._size=w; }
-    if(this._size>h) { this._size=h; }
-    if(this._x<this._size/2) { this._x=this._size/2; }
-    if(this._x>w-this._size/2) { this._x=w-this._size/2; }
-    if(this._y<this._size/2) { this._y=this._size/2; }
-    if(this._y>h-this._size/2) { this._y=h-this._size/2; }
+    if(this._width>w) { this._width=w; }
+    if(this._height>h) { this._height=h; }
+    if(this._x<this._width/2) { this._x=this._width/2; }
+    if(this._x>w-this._width/2) { this._x=w-this._width/2; }
+    if(this._y<this._height/2) { this._y=this._height/2; }
+    if(this._y>h-this._height/2) { this._y=h-this._height/2; }
   };
 
   CropArea.prototype._drawArea=function() {};
 
   CropArea.prototype.draw=function() {
     // draw crop area
-    this._cropCanvas.drawCropArea(this._image,[this._x,this._y],this._size,this._drawArea);
+    this._cropCanvas.drawCropArea(this._image,[this._x,this._y], this._width, this._height,this._drawArea);
   };
 
   CropArea.prototype.processMouseMove=function() {};

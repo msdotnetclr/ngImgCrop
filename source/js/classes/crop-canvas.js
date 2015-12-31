@@ -76,50 +76,51 @@ crop.factory('cropCanvas', [function() {
       ctx.restore();
     };
 
-    this.drawIconResizeBoxBase=function(centerCoords, boxSize, scale) {
-      var scaledBoxSize=boxSize*scale;
+    this.drawIconResizeBoxBase=function(centerCoords, boxWidth, boxHeight, scale) {
+        var scaledBoxWidth = boxWidth * scale;
+        var scaledBoxHeight = boxHeight * scale;
       ctx.save();
       ctx.strokeStyle = colors.resizeBoxStroke;
       ctx.lineWidth = 2;
       ctx.fillStyle = colors.resizeBoxFill;
-      ctx.fillRect(centerCoords[0] - scaledBoxSize/2, centerCoords[1] - scaledBoxSize/2, scaledBoxSize, scaledBoxSize);
-      ctx.strokeRect(centerCoords[0] - scaledBoxSize/2, centerCoords[1] - scaledBoxSize/2, scaledBoxSize, scaledBoxSize);
+      ctx.fillRect(centerCoords[0] - scaledBoxWidth/2, centerCoords[1] - scaledBoxHeight/2, scaledBoxWidth, scaledBoxHeight);
+      ctx.strokeRect(centerCoords[0] - scaledBoxWidth / 2, centerCoords[1] - scaledBoxHeight / 2, scaledBoxWidth, scaledBoxHeight);
       ctx.restore();
     };
-    this.drawIconResizeBoxNESW=function(centerCoords, boxSize, scale) {
-      this.drawIconResizeBoxBase(centerCoords, boxSize, scale);
+    this.drawIconResizeBoxNESW = function (centerCoords, boxWidth, boxHeight, scale) {
+        this.drawIconResizeBoxBase(centerCoords, boxWidth, boxHeight, scale);
       drawFilledPolygon(shapeArrowNE, colors.resizeBoxArrowFill, centerCoords, scale);
       drawFilledPolygon(shapeArrowSW, colors.resizeBoxArrowFill, centerCoords, scale);
     };
-    this.drawIconResizeBoxNWSE=function(centerCoords, boxSize, scale) {
-      this.drawIconResizeBoxBase(centerCoords, boxSize, scale);
+    this.drawIconResizeBoxNWSE = function (centerCoords, boxWidth, boxHeight, scale) {
+        this.drawIconResizeBoxBase(centerCoords, boxWidth, boxHeight, scale);
       drawFilledPolygon(shapeArrowNW, colors.resizeBoxArrowFill, centerCoords, scale);
       drawFilledPolygon(shapeArrowSE, colors.resizeBoxArrowFill, centerCoords, scale);
     };
 
     /* Crop Area */
 
-    this.drawCropArea=function(image, centerCoords, size, fnDrawClipPath) {
+    this.drawCropArea=function(image, centerCoords, width, height, fnDrawClipPath) {
       var xRatio=image.width/ctx.canvas.width,
           yRatio=image.height/ctx.canvas.height,
-          xLeft=centerCoords[0]-size/2,
-          yTop=centerCoords[1]-size/2;
+          xLeft=centerCoords[0]-width/2,
+          yTop=centerCoords[1]-height/2;
 
       ctx.save();
       ctx.strokeStyle = colors.areaOutline;
       ctx.lineWidth = 2;
       ctx.beginPath();
-      fnDrawClipPath(ctx, centerCoords, size);
+      fnDrawClipPath(ctx, centerCoords, width, height);
       ctx.stroke();
       ctx.clip();
 
       // draw part of original image
-      if (size > 0) {
-          ctx.drawImage(image, xLeft*xRatio, yTop*yRatio, size*xRatio, size*yRatio, xLeft, yTop, size, size);
+      if (width > 0) {
+          ctx.drawImage(image, xLeft*xRatio, yTop*yRatio, width*xRatio, height*yRatio, xLeft, yTop, width, height);
       }
 
       ctx.beginPath();
-      fnDrawClipPath(ctx, centerCoords, size);
+      fnDrawClipPath(ctx, centerCoords, width, height);
       ctx.stroke();
       ctx.clip();
 

@@ -35,7 +35,8 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
         maxCanvasDims=[300,300];
 
     // Result Image size
-    var resImgSize=200;
+    var resImgWidth = 200;
+    var resImgHeight = 200;
 
     // Result Image type
     var resImgFormat='image/png';
@@ -93,7 +94,8 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
 
         theArea.setX(ctx.canvas.width/2);
         theArea.setY(ctx.canvas.height/2);
-        theArea.setSize(Math.min(200, ctx.canvas.width/2, ctx.canvas.height/2));
+        theArea.setWidth(Math.min(200, ctx.canvas.width / 2));
+        theArea.setHeight(Math.min(200, ctx.canvas.height / 2));
       } else {
         elCanvas.prop('width',0).prop('height',0).css({'margin-top': 0});
       }
@@ -168,10 +170,10 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
       var temp_ctx, temp_canvas;
       temp_canvas = angular.element('<canvas></canvas>')[0];
       temp_ctx = temp_canvas.getContext('2d');
-      temp_canvas.width = resImgSize;
-      temp_canvas.height = resImgSize;
+      temp_canvas.width = resImgWidth;
+      temp_canvas.height = resImgHeight;
       if(image!==null){
-        temp_ctx.drawImage(image, (theArea.getX()-theArea.getSize()/2)*(image.width/ctx.canvas.width), (theArea.getY()-theArea.getSize()/2)*(image.height/ctx.canvas.height), theArea.getSize()*(image.width/ctx.canvas.width), theArea.getSize()*(image.height/ctx.canvas.height), 0, 0, resImgSize, resImgSize);
+        temp_ctx.drawImage(image, (theArea.getX()-theArea.getWidth()/2)*(image.width/ctx.canvas.width), (theArea.getY()-theArea.getHeight()/2)*(image.height/ctx.canvas.height), theArea.getWidth()*(image.width/ctx.canvas.width), theArea.getHeight()*(image.height/ctx.canvas.height), 0, 0, resImgWidth, resImgHeight);
       }
       if (resImgQuality!==null ){
         return temp_canvas.toDataURL(resImgFormat, resImgQuality);
@@ -273,7 +275,8 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
 
         theArea.setX(theArea.getX()*ratioNewCurWidth);
         theArea.setY(theArea.getY()*ratioNewCurHeight);
-        theArea.setSize(theArea.getSize()*ratioMin);
+        theArea.setWidth(theArea.getWidth() * ratioMin);
+        theArea.setHeight(theArea.getHeight() * ratioMin);
       } else {
         elCanvas.prop('width',0).prop('height',0).css({'margin-top': 0});
       }
@@ -282,19 +285,34 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
 
     };
 
-    this.setAreaMinSize=function(size) {
-      size=parseInt(size,10);
-      if(!isNaN(size)) {
-        theArea.setMinSize(size);
+    this.setAreaMinWidth=function(width) {
+        width = parseInt(width, 10);
+        if (!isNaN(width)) {
+            theArea.setMinWidth(width);
         drawScene();
       }
     };
 
-    this.setResultImageSize=function(size) {
-      size=parseInt(size,10);
-      if(!isNaN(size)) {
-        resImgSize=size;
+    this.setResultImageWidth = function (width) {
+        width = parseInt(width, 10);
+        if (!isNaN(width)) {
+            resImgWidth = width;
       }
+    };
+
+    this.setAreaMinHeight = function (height) {
+        height = parseInt(height, 10);
+        if (!isNaN(height)) {
+            theArea.setMinHeight(height);
+            drawScene();
+        }
+    };
+
+    this.setResultImageHeight = function (height) {
+        height = parseInt(height, 10);
+        if (!isNaN(height)) {
+            resImgHeight = height;
+        }
     };
 
     this.setResultImageFormat=function(format) {
@@ -309,8 +327,10 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
     };
 
     this.setAreaType=function(type) {
-      var curSize=theArea.getSize(),
-          curMinSize=theArea.getMinSize(),
+        var curWidth = theArea.getWidth(),
+            curMinWidth = theArea.getMinWidth(),
+            curHeight = theArea.getHeight(),
+          curMinHeight = theArea.getMinHeight(),
           curX=theArea.getX(),
           curY=theArea.getY();
 
@@ -319,8 +339,10 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
         AreaClass=CropAreaSquare;
       }
       theArea = new AreaClass(ctx, events);
-      theArea.setMinSize(curMinSize);
-      theArea.setSize(curSize);
+      theArea.setMinWidth(curMinWidth);
+      theArea.setWidth(curWidth);
+      theArea.setMinHeight(curMinHeight);
+      theArea.setHeight(curHeight);
       theArea.setX(curX);
       theArea.setY(curY);
 
