@@ -76,24 +76,23 @@ crop.factory('cropCanvas', [function() {
       ctx.restore();
     };
 
-    this.drawIconResizeBoxBase=function(centerCoords, boxWidth, boxHeight, scale) {
-        var scaledBoxWidth = boxWidth * scale;
-        var scaledBoxHeight = boxHeight * scale;
+    this.drawIconResizeBoxBase = function (centerCoords, boxSize, scale) {
+        var scaledBoxSize = boxSize * scale;
       ctx.save();
       ctx.strokeStyle = colors.resizeBoxStroke;
       ctx.lineWidth = 2;
       ctx.fillStyle = colors.resizeBoxFill;
-      ctx.fillRect(centerCoords[0] - scaledBoxWidth/2, centerCoords[1] - scaledBoxHeight/2, scaledBoxWidth, scaledBoxHeight);
-      ctx.strokeRect(centerCoords[0] - scaledBoxWidth / 2, centerCoords[1] - scaledBoxHeight / 2, scaledBoxWidth, scaledBoxHeight);
+      ctx.fillRect(centerCoords[0] - boxSize / 2, centerCoords[1] - boxSize / 2, boxSize, boxSize);
+      ctx.strokeRect(centerCoords[0] - boxSize / 2, centerCoords[1] - boxSize / 2, boxSize, boxSize);
       ctx.restore();
     };
-    this.drawIconResizeBoxNESW = function (centerCoords, boxWidth, boxHeight, scale) {
-        this.drawIconResizeBoxBase(centerCoords, boxWidth, boxHeight, scale);
+    this.drawIconResizeBoxNESW = function (centerCoords, boxSize, scale) {
+        this.drawIconResizeBoxBase(centerCoords, boxSize, scale);
       drawFilledPolygon(shapeArrowNE, colors.resizeBoxArrowFill, centerCoords, scale);
       drawFilledPolygon(shapeArrowSW, colors.resizeBoxArrowFill, centerCoords, scale);
     };
-    this.drawIconResizeBoxNWSE = function (centerCoords, boxWidth, boxHeight, scale) {
-        this.drawIconResizeBoxBase(centerCoords, boxWidth, boxHeight, scale);
+    this.drawIconResizeBoxNWSE = function (centerCoords, boxSize, scale) {
+        this.drawIconResizeBoxBase(centerCoords, boxSize, scale);
       drawFilledPolygon(shapeArrowNW, colors.resizeBoxArrowFill, centerCoords, scale);
       drawFilledPolygon(shapeArrowSE, colors.resizeBoxArrowFill, centerCoords, scale);
     };

@@ -28,7 +28,7 @@ crop.factory('cropAreaCircle', ['cropArea', function(CropArea) {
   CropAreaCircle.prototype = new CropArea();
 
   CropAreaCircle.prototype._calcCirclePerimeterCoords=function(angleDegrees) {
-    var hSize=this._size/2;
+    var hSize=this._width/2;
     var angleRadians=angleDegrees * (Math.PI / 180),
         circlePerimeterX=this._x + hSize * Math.cos(angleRadians),
         circlePerimeterY=this._y + hSize * Math.sin(angleRadians);
@@ -40,7 +40,7 @@ crop.factory('cropAreaCircle', ['cropArea', function(CropArea) {
   };
 
   CropAreaCircle.prototype._isCoordWithinArea=function(coord) {
-    return Math.sqrt((coord[0]-this._x)*(coord[0]-this._x) + (coord[1]-this._y)*(coord[1]-this._y)) < this._size/2;
+      return Math.sqrt((coord[0] - this._x) * (coord[0] - this._x) + (coord[1] - this._y) * (coord[1] - this._y)) < this._width / 2;
   };
   CropAreaCircle.prototype._isCoordWithinBoxResize=function(coord) {
     var resizeIconCenterCoords=this._calcResizeIconCenterCoords();
@@ -49,8 +49,8 @@ crop.factory('cropAreaCircle', ['cropArea', function(CropArea) {
            coord[1] > resizeIconCenterCoords[1] - hSize && coord[1] < resizeIconCenterCoords[1] + hSize);
   };
 
-  CropAreaCircle.prototype._drawArea=function(ctx,centerCoords,size){
-    ctx.arc(centerCoords[0],centerCoords[1],size/2,0,2*Math.PI);
+  CropAreaCircle.prototype._drawArea=function(ctx,centerCoords,width, height){
+    ctx.arc(centerCoords[0],centerCoords[1],width/2,0,2*Math.PI);
   };
 
   CropAreaCircle.prototype.draw=function() {
@@ -88,7 +88,7 @@ crop.factory('cropAreaCircle', ['cropArea', function(CropArea) {
           iFR = this._posResizeStartSize + iFX*2;
         }
 
-        this._size = Math.max(this._minSize, iFR);
+        this._width = Math.max(this._minWidth, iFR);
         this._boxResizeIsHover = true;
         res=true;
         this._events.trigger('area-resize');
@@ -117,7 +117,7 @@ crop.factory('cropAreaCircle', ['cropArea', function(CropArea) {
       this._boxResizeIsHover = true;
       this._posResizeStartX=mouseDownX;
       this._posResizeStartY=mouseDownY;
-      this._posResizeStartSize = this._size;
+      this._posResizeStartSize = this._width;
       this._events.trigger('area-resize-start');
     } else if (this._isCoordWithinArea([mouseDownX,mouseDownY])) {
       this._areaIsDragging = true;

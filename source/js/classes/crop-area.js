@@ -40,17 +40,34 @@ crop.factory('cropArea', ['cropCanvas', function(CropCanvas) {
     this._dontDragOutside();
   };
 
+  CropArea.prototype.getSize = function () {
+      return this._width;
+  };
+  CropArea.prototype.setSize = function (size) {
+      this._width = this._height = size;
+      this._dontDragOutside();
+  };
+
+  CropArea.prototype.getMinSize = function () {
+      return this._minWidth;
+  };
+  CropArea.prototype.setMinSize = function (size) {
+      this._minWidth = this._minHeight = size;
+      this._dontDragOutside();
+  };
+
   CropArea.prototype.getHeight = function () {
-    return this._height;
+      return this._height;
   };
   CropArea.prototype.setHeight = function (height) {
-    this._height = Math.max(this._minHeight, height);
-    this._dontDragOutside();
+      this._height = Math.max(this._minHeight, height);
+      this._dontDragOutside();
   };
 
   CropArea.prototype.getMinHeight = function () {
     return this._minHeight;
   };
+
   CropArea.prototype.setMinHeight = function (height) {
       this._minHeight = height;
     this._height = Math.max(this._minHeight, this._height);
@@ -91,7 +108,7 @@ crop.factory('cropArea', ['cropCanvas', function(CropCanvas) {
 
   CropArea.prototype.draw=function() {
     // draw crop area
-    this._cropCanvas.drawCropArea(this._image,[this._x,this._y], this._width, this._height,this._drawArea);
+    this._cropCanvas.drawCropArea(this._image,[this._x,this._y], this._width, this._height, this._drawArea);
   };
 
   CropArea.prototype.processMouseMove=function() {};

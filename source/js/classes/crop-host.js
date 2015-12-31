@@ -93,9 +93,14 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
         elCanvas.prop('width',canvasDims[0]).prop('height',canvasDims[1]).css({'margin-left': -canvasDims[0]/2+'px', 'margin-top': -canvasDims[1]/2+'px'});
 
         theArea.setX(ctx.canvas.width/2);
-        theArea.setY(ctx.canvas.height/2);
-        theArea.setWidth(Math.min(200, ctx.canvas.width / 2));
-        theArea.setHeight(Math.min(200, ctx.canvas.height / 2));
+        theArea.setY(ctx.canvas.height / 2);
+        if (theArea instanceof CropAreaCircle) {
+            theArea.setSize(Math.min(200, ctx.canvas.width / 2));
+        }
+        else {
+            theArea.setWidth(Math.min(200, ctx.canvas.width / 2));
+            theArea.setHeight(Math.min(200, ctx.canvas.height / 2));
+        }
       } else {
         elCanvas.prop('width',0).prop('height',0).css({'margin-top': 0});
       }
@@ -339,10 +344,16 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
         AreaClass=CropAreaSquare;
       }
       theArea = new AreaClass(ctx, events);
-      theArea.setMinWidth(curMinWidth);
-      theArea.setWidth(curWidth);
-      theArea.setMinHeight(curMinHeight);
-      theArea.setHeight(curHeight);
+      if (type === 'square') {
+          theArea.setMinWidth(curMinWidth);
+          theArea.setWidth(curWidth);
+          theArea.setMinHeight(curMinHeight);
+          theArea.setHeight(curHeight);
+      }
+      else {
+          theArea.setMinSize(curMinWidth);
+          theArea.setSize(curWidth);
+      }
       theArea.setX(curX);
       theArea.setY(curY);
 
