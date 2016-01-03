@@ -34,10 +34,6 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
     var minCanvasDims=[100,100],
         maxCanvasDims=[300,300];
 
-    // Result Image size
-    var resImgWidth = 200;
-    var resImgHeight = 200;
-
     // Result Image type
     var resImgFormat='image/png';
 
@@ -308,25 +304,11 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
       }
     };
 
-    this.setResultImageWidth = function (width) {
-        width = parseInt(width, 10);
-        if (!isNaN(width)) {
-            resImgWidth = width;
-      }
-    };
-
     this.setAreaMinHeight = function (height) {
         height = parseInt(height, 10);
         if (!isNaN(height)) {
             theArea.setMinHeight(height);
             drawScene();
-        }
-    };
-
-    this.setResultImageHeight = function (height) {
-        height = parseInt(height, 10);
-        if (!isNaN(height)) {
-            resImgHeight = height;
         }
     };
 

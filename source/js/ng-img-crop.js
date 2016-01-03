@@ -10,9 +10,7 @@ crop.directive('imgCrop', ['$timeout', 'cropHost', 'cropPubSub', function($timeo
       changeOnFly: '=',
       areaType: '@',
       areaMinWidth: '=',
-      resultImageWidth: '=',
       areaMinHeight: '=',
-      resultImageHeight: '=',
       resultImageFormat: '@',
       resultImageQuality: '=',
 
@@ -89,16 +87,8 @@ crop.directive('imgCrop', ['$timeout', 'cropHost', 'cropPubSub', function($timeo
           cropHost.setAreaMinWidth(scope.areaMinWidth);
           updateResultImage(scope);
       });
-      scope.$watch('resultImageWidth', function () {
-          cropHost.setResultImageWidth(scope.resultImageWidth);
-          updateResultImage(scope);
-      });
       scope.$watch('areaMinHeight', function () {
           cropHost.setAreaMinHeight(scope.areaMinHeight);
-          updateResultImage(scope);
-      });
-      scope.$watch('resultImageHeight', function () {
-          cropHost.setResultImageHeight(scope.resultImageHeight);
           updateResultImage(scope);
       });
       scope.$watch('resultImageFormat', function () {
