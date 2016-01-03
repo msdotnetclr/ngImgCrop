@@ -88,7 +88,7 @@ crop.factory('cropAreaCircle', ['cropArea', function(CropArea) {
           iFR = this._posResizeStartSize + iFX*2;
         }
 
-        this._width = Math.max(this._minWidth, iFR);
+        this._height = this._width = Math.max(this._minWidth, iFR);
         this._boxResizeIsHover = true;
         res=true;
         this._events.trigger('area-resize');
