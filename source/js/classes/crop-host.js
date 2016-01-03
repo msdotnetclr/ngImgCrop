@@ -32,7 +32,12 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
 
     // Dimensions
     var minCanvasDims=[100,100],
-        maxCanvasDims=[300,300];
+        maxCanvasDims = [300, 300];
+
+    // Result Image Max Width/Height
+
+    var maxResultHeight = 0,
+    maxResultWidth = 0;
 
     // Result Image type
     var resImgFormat='image/png';
@@ -171,8 +176,9 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
       var temp_ctx, temp_canvas;
       temp_canvas = angular.element('<canvas></canvas>')[0];
       temp_ctx = temp_canvas.getContext('2d');
-      var rw = 200;
-      var rh = 200;
+      var rw = 1;
+      var rh = 1;
+
       if (image != null) {
           if (theArea.getWidth() > 0) {
               rw = theArea.getWidth() / ctx.canvas.clientWidth * image.naturalWidth;
@@ -180,6 +186,15 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
           if (theArea.getHeight() > 0) {
               rh = theArea.getHeight() / ctx.canvas.clientHeight * image.naturalHeight;
           }
+          var scale = 1;
+          if (maxResultWidth > 0 && rw > maxResultWidth) {
+              scale = maxResultWidth / rw;
+          }
+          if (maxResultHeight > 0 && rh > maxResultHeight) {
+              scale = (maxResultHeight / rh) > scale ? scale : (maxResultHeight / rh);
+          }
+          rw = rw * scale;
+          rh = rh * scale;
       }
       temp_canvas.width = rw;
       temp_canvas.height = rh;
@@ -295,6 +310,21 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
       drawScene();
 
     };
+
+    this.setMaxResultWidth = function (width) {
+        width = parseInt(width, 10);
+        if (!isNaN(width)) {
+            maxResultWidth = Math.abs(width);
+        }
+    };
+
+    this.setMaxResultHeight = function (height) {
+        height = parseInt(height, 10);
+        if (!isNaN(height)) {
+            maxResultHeight = Math.abs(height);
+        }
+    };
+
 
     this.setAreaMinWidth=function(width) {
         width = parseInt(width, 10);

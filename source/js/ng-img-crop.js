@@ -13,6 +13,8 @@ crop.directive('imgCrop', ['$timeout', 'cropHost', 'cropPubSub', function($timeo
       areaMinHeight: '=',
       resultImageFormat: '@',
       resultImageQuality: '=',
+      maxResultWidth: "=",
+      maxResultHeight: "=",
 
       onChange: '&',
       onLoadBegin: '&',
@@ -89,6 +91,14 @@ crop.directive('imgCrop', ['$timeout', 'cropHost', 'cropPubSub', function($timeo
       });
       scope.$watch('areaMinHeight', function () {
           cropHost.setAreaMinHeight(scope.areaMinHeight);
+          updateResultImage(scope);
+      });
+      scope.$watch('maxResultWidth', function () {
+          cropHost.setMaxResultWidth(scope.maxResultWidth);
+          updateResultImage(scope);
+      });
+      scope.$watch('maxResultHeight', function () {
+          cropHost.setMaxResultHeight(scope.maxResultHeight);
           updateResultImage(scope);
       });
       scope.$watch('resultImageFormat', function () {

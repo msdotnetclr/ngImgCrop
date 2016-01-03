@@ -15,6 +15,8 @@
                 areaMinHeight: '=',
                 resultImageFormat: '@',
                 resultImageQuality: '=',
+                maxResultWidth: "=",
+                maxResultHeight: "=",
 
                 onChange: '&',
                 onLoadBegin: '&',
@@ -93,6 +95,14 @@
                     cropHost.setAreaMinHeight(scope.areaMinHeight);
                     updateResultImage(scope);
                 });
+                scope.$watch('maxResultWidth', function () {
+                    cropHost.setMaxResultWidth(scope.maxResultWidth);
+                    updateResultImage(scope);
+                });
+                scope.$watch('maxResultHeight', function () {
+                    cropHost.setMaxResultHeight(scope.maxResultHeight);
+                    updateResultImage(scope);
+                });
                 scope.$watch('resultImageFormat', function () {
                     cropHost.setResultImageFormat(scope.resultImageFormat);
                     updateResultImage(scope);
@@ -121,6 +131,7 @@
             }
         };
     }]);
+
     crop.factory('cropAreaCircle', ['cropArea', function (CropArea) {
         var CropAreaCircle = function () {
             CropArea.apply(this, arguments);
@@ -270,9 +281,6 @@
 
         return CropAreaCircle;
     }]);
-
-
-
 
     crop.factory('cropAreaSquare', ['cropArea', function (CropArea) {
         var CropAreaSquare = function () {
@@ -496,8 +504,6 @@
         return CropAreaSquare;
     }]);
 
-
-
     crop.factory('cropArea', ['cropCanvas', function (CropCanvas) {
         var CropArea = function (ctx, events) {
             this._ctx = ctx;
@@ -617,7 +623,6 @@
 
         return CropArea;
     }]);
-
 
     crop.factory('cropCanvas', [function () {
         // Shape = Array of [x,y]; [0, 0] - center
@@ -1530,7 +1535,6 @@
     }]);
 
 
-
     crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'cropEXIF', function ($document, CropAreaCircle, CropAreaSquare, cropEXIF) {
         /* STATIC FUNCTIONS */
 
@@ -1564,6 +1568,11 @@
             // Dimensions
             var minCanvasDims = [100, 100],
                 maxCanvasDims = [300, 300];
+
+            // Result Image Max Width/Height
+
+            var maxResultHeight = 0,
+            maxResultWidth = 0;
 
             // Result Image type
             var resImgFormat = 'image/png';
@@ -1702,8 +1711,9 @@
                 var temp_ctx, temp_canvas;
                 temp_canvas = angular.element('<canvas></canvas>')[0];
                 temp_ctx = temp_canvas.getContext('2d');
-                var rw = 200;
-                var rh = 200;
+                var rw = 1;
+                var rh = 1;
+
                 if (image != null) {
                     if (theArea.getWidth() > 0) {
                         rw = theArea.getWidth() / ctx.canvas.clientWidth * image.naturalWidth;
@@ -1711,6 +1721,15 @@
                     if (theArea.getHeight() > 0) {
                         rh = theArea.getHeight() / ctx.canvas.clientHeight * image.naturalHeight;
                     }
+                    var scale = 1;
+                    if (maxResultWidth > 0 && rw > maxResultWidth) {
+                        scale = maxResultWidth / rw;
+                    }
+                    if (maxResultHeight > 0 && rh > maxResultHeight) {
+                        scale = (maxResultHeight / rh) > scale ? scale : (maxResultHeight / rh);
+                    }
+                    rw = rw * scale;
+                    rh = rh * scale;
                 }
                 temp_canvas.width = rw;
                 temp_canvas.height = rh;
@@ -1827,6 +1846,21 @@
 
             };
 
+            this.setMaxResultWidth = function (width) {
+                width = parseInt(width, 10);
+                if (!isNaN(width)) {
+                    maxResultWidth = Math.abs(width);
+                }
+            };
+
+            this.setMaxResultHeight = function (height) {
+                height = parseInt(height, 10);
+                if (!isNaN(height)) {
+                    maxResultHeight = Math.abs(height);
+                }
+            };
+
+
             this.setAreaMinWidth = function (width) {
                 width = parseInt(width, 10);
                 if (!isNaN(width)) {
@@ -1835,13 +1869,6 @@
                 }
             };
 
-            //this.setResultImageWidth = function (width) {
-            //    width = parseInt(width, 10);
-            //    if (!isNaN(width)) {
-            //        resImgWidth = width;
-            //    }
-            //};
-
             this.setAreaMinHeight = function (height) {
                 height = parseInt(height, 10);
                 if (!isNaN(height)) {
@@ -1849,13 +1876,6 @@
                     drawScene();
                 }
             };
-
-            //this.setResultImageHeight = function (height) {
-            //    height = parseInt(height, 10);
-            //    if (!isNaN(height)) {
-            //        resImgHeight = height;
-            //    }
-            //};
 
             this.setResultImageFormat = function (format) {
                 resImgFormat = format;
