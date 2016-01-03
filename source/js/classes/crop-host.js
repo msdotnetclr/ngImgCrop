@@ -175,21 +175,23 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
       var temp_ctx, temp_canvas;
       temp_canvas = angular.element('<canvas></canvas>')[0];
       temp_ctx = temp_canvas.getContext('2d');
+      var rw = 200;
+      var rh = 200;
       if (image != null) {
           if (theArea.getWidth() > 0) {
-              resImgWidth = theArea.getWidth() / ctx.canvas.clientWidth * image.naturalWidth;
+              rw = theArea.getWidth() / ctx.canvas.clientWidth * image.naturalWidth;
           }
           if (theArea.getHeight() > 0) {
-              resImgHeight = theArea.getHeight() / ctx.canvas.clientHeight * image.naturalHeight;
+              rh = theArea.getHeight() / ctx.canvas.clientHeight * image.naturalHeight;
           }
       }
-      temp_canvas.width = resImgWidth;
-      temp_canvas.height = resImgHeight;
-      if(image!==null){
-        temp_ctx.drawImage(image, (theArea.getX()-theArea.getWidth()/2)*(image.width/ctx.canvas.width), (theArea.getY()-theArea.getHeight()/2)*(image.height/ctx.canvas.height), theArea.getWidth()*(image.width/ctx.canvas.width), theArea.getHeight()*(image.height/ctx.canvas.height), 0, 0, resImgWidth, resImgHeight);
+      temp_canvas.width = rw;
+      temp_canvas.height = rh;
+      if (image !== null) {
+          temp_ctx.drawImage(image, (theArea.getX() - theArea.getWidth() / 2) * (image.width / ctx.canvas.width), (theArea.getY() - theArea.getHeight() / 2) * (image.height / ctx.canvas.height), theArea.getWidth() * (image.width / ctx.canvas.width), theArea.getHeight() * (image.height / ctx.canvas.height), 0, 0, rw, rh);
       }
-      if (resImgQuality!==null ){
-        return temp_canvas.toDataURL(resImgFormat, resImgQuality);
+      if (resImgQuality !== null) {
+          return temp_canvas.toDataURL(resImgFormat, resImgQuality);
       }
       return temp_canvas.toDataURL(resImgFormat);
     };
