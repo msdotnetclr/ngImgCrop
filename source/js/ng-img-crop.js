@@ -13,8 +13,10 @@ crop.directive('imgCrop', ['$timeout', 'cropHost', 'cropPubSub', function($timeo
       areaMinHeight: '=',
       resultImageFormat: '@',
       resultImageQuality: '=',
-      maxResultWidth: "=",
-      maxResultHeight: "=",
+      resultWidth: "=",
+      resultHeight: "=",
+      keepAspectRatio: "=",
+      allowUpscale: "=",
 
       onChange: '&',
       onLoadBegin: '&',
@@ -93,14 +95,23 @@ crop.directive('imgCrop', ['$timeout', 'cropHost', 'cropPubSub', function($timeo
           cropHost.setAreaMinHeight(scope.areaMinHeight);
           updateResultImage(scope);
       });
-      scope.$watch('maxResultWidth', function () {
-          cropHost.setMaxResultWidth(scope.maxResultWidth);
+      scope.$watch('resultWidth', function () {
+          cropHost.setMaxResultWidth(scope.resultWidth);
           updateResultImage(scope);
       });
-      scope.$watch('maxResultHeight', function () {
-          cropHost.setMaxResultHeight(scope.maxResultHeight);
+      scope.$watch('resultHeight', function () {
+          cropHost.setMaxResultHeight(scope.resultHeight);
           updateResultImage(scope);
       });
+      scope.$watch('keepAspectRatio', function () {
+          cropHost.setKeepAspectRatio(scope.keepAspectRatio);
+          updateResultImage(scope);
+      });
+      scope.$watch('allowUpscale', function () {
+          cropHost.setAllowUpscale(scope.allowUpscale);
+          updateResultImage(scope);
+      });
+
       scope.$watch('resultImageFormat', function () {
         cropHost.setResultImageFormat(scope.resultImageFormat);
         updateResultImage(scope);

@@ -15,8 +15,10 @@
                 areaMinHeight: '=',
                 resultImageFormat: '@',
                 resultImageQuality: '=',
-                maxResultWidth: "=",
-                maxResultHeight: "=",
+                resultWidth: "=",
+                resultHeight: "=",
+                keepAspectRatio: "=",
+                allowUpscale: "=",
 
                 onChange: '&',
                 onLoadBegin: '&',
@@ -95,14 +97,23 @@
                     cropHost.setAreaMinHeight(scope.areaMinHeight);
                     updateResultImage(scope);
                 });
-                scope.$watch('maxResultWidth', function () {
-                    cropHost.setMaxResultWidth(scope.maxResultWidth);
+                scope.$watch('resultWidth', function () {
+                    cropHost.setMaxResultWidth(scope.resultWidth);
                     updateResultImage(scope);
                 });
-                scope.$watch('maxResultHeight', function () {
-                    cropHost.setMaxResultHeight(scope.maxResultHeight);
+                scope.$watch('resultHeight', function () {
+                    cropHost.setMaxResultHeight(scope.resultHeight);
                     updateResultImage(scope);
                 });
+                scope.$watch('keepAspectRatio', function () {
+                    cropHost.setKeepAspectRatio(scope.keepAspectRatio);
+                    updateResultImage(scope);
+                });
+                scope.$watch('allowUpscale', function () {
+                    cropHost.setAllowUpscale(scope.allowUpscale);
+                    updateResultImage(scope);
+                });
+
                 scope.$watch('resultImageFormat', function () {
                     cropHost.setResultImageFormat(scope.resultImageFormat);
                     updateResultImage(scope);
@@ -1572,7 +1583,9 @@
             // Result Image Max Width/Height
 
             var maxResultHeight = 0,
-            maxResultWidth = 0;
+            maxResultWidth = 0,
+            keepAspectRatio = true,
+            allowUpscale = false;
 
             // Result Image type
             var resImgFormat = 'image/png';
@@ -1721,15 +1734,31 @@
                     if (theArea.getHeight() > 0) {
                         rh = theArea.getHeight() / ctx.canvas.clientHeight * image.naturalHeight;
                     }
-                    var scale = 1;
-                    if (maxResultWidth > 0 && rw > maxResultWidth) {
-                        scale = maxResultWidth / rw;
+                    var scale_w = 1;
+                    var scale_h = 1;
+                    if (maxResultWidth > 0 && (allowUpscale || rw > maxResultWidth)) {
+                        scale_w = maxResultWidth / rw;
                     }
-                    if (maxResultHeight > 0 && rh > maxResultHeight) {
-                        scale = (maxResultHeight / rh) > scale ? scale : (maxResultHeight / rh);
+                    if (maxResultHeight > 0 && (allowUpscale || rh > maxResultHeight)) {
+                        scale_h = maxResultHeight / rh;
                     }
-                    rw = rw * scale;
-                    rh = rh * scale;
+                    if (false != keepAspectRatio) {
+                        var scale = scale_w > scale_h ? scale_h : scale_w;
+                        if (allowUpscale) {
+                            if (scale_h == 1) {
+                                scale = scale_w;
+                            }
+                            else if (scale_w == 1) {
+                                scale = scale_h;
+                            }
+                        }
+                        rw = rw * scale;
+                        rh = rh * scale;
+                    }
+                    else {
+                        rw = rw * scale_w;
+                        rh = rh * scale_h;
+                    }
                 }
                 temp_canvas.width = rw;
                 temp_canvas.height = rh;
@@ -1858,6 +1887,14 @@
                 if (!isNaN(height)) {
                     maxResultHeight = Math.abs(height);
                 }
+            };
+
+            this.setKeepAspectRatio = function (kar) {
+                keepAspectRatio = kar;
+            };
+
+            this.setAllowUpscale = function (u) {
+                allowUpscale = u;
             };
 
 
